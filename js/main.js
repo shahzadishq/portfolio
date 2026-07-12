@@ -209,29 +209,32 @@
     });
   }
 
-  /* ---------- Case card tilt ---------- */
-  if (!prefersReduced && matchMedia("(pointer: fine)").matches) {
-    $$("[data-tilt]").forEach((card) => {
-      const inner = $(".case-browser", card);
-      if (!inner) return;
-      let raf = null;
-      card.addEventListener("mousemove", (e) => {
-        const r = card.getBoundingClientRect();
-        const nx = (e.clientX - r.left) / r.width - 0.5;
-        const ny = (e.clientY - r.top) / r.height - 0.5;
-        if (raf) cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(() => {
-          inner.style.transform = `rotateY(${(nx * 5).toFixed(2)}deg) rotateX(${(-ny * 5).toFixed(2)}deg) translateZ(0)`;
-        });
-      });
-      card.addEventListener("mouseleave", () => {
-        if (raf) cancelAnimationFrame(raf);
-        inner.style.transform = "";
-        inner.style.transition = "transform .6s cubic-bezier(.22,1,.36,1)";
-        setTimeout(() => (inner.style.transition = ""), 600);
-      });
-    });
-  }
+  /* ---------- Portfolio: scroll the long screenshot on hover ---------- */
+  $$("[data-scrollshot]").forEach((box) => {
+    const img = $(".scrollshot", box);
+    if (!img) return;
+    const media = box.closest(".case-media") || box;
+
+    const scrollTo = (end) => {
+      const delta = Math.max(img.offsetHeight - box.offsetHeight, 0);
+      if (!delta) return;
+      if (prefersReduced) {
+        img.style.transition = "none";
+        img.style.transform = end ? `translateY(${-delta}px)` : "";
+        return;
+      }
+      // duration proportional to distance: ~340px/s down, 3× faster back up
+      const dur = end ? Math.max(delta / 340, 2.5) : Math.max(delta / 1000, 0.6);
+      img.style.transition = `transform ${dur.toFixed(2)}s ${end ? "linear" : "cubic-bezier(.22,1,.36,1)"}`;
+      img.style.transform = end ? `translateY(${-delta}px)` : "";
+    };
+
+    media.addEventListener("mouseenter", () => scrollTo(true));
+    media.addEventListener("mouseleave", () => scrollTo(false));
+    // keyboard / touch parity: focusing the case link previews the scroll
+    media.addEventListener("focusin", () => scrollTo(true));
+    media.addEventListener("focusout", () => scrollTo(false));
+  });
 
   /* ---------- Timeline progress line ---------- */
   const timeline = $("[data-timeline]");
