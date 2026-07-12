@@ -941,6 +941,8 @@ p { color: var(--muted); }
 }
 .case-link:hover { color: var(--blue); }
 .case-link:hover svg { transform: translate(3px, -3px); }
+.case-link-muted { color: var(--muted); cursor: default; }
+.case-link-muted:hover { color: var(--muted); }
 
 /* ==========================================================================
    07 · PROCESS
