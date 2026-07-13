@@ -29,7 +29,9 @@
   --display-2: clamp(2.1rem, 1.4rem + 3.2vw, 4rem);
   --display-3: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
 
-  --space-section: clamp(5rem, 3.5rem + 7vw, 10rem);
+  /* Half-gap per section side: two adjacent sections meet at exactly
+     2 × this value — 100px on desktop, ~64px tablet, ~48px mobile */
+  --space-section: clamp(1.5rem, 0.9rem + 2.5vw, 3.125rem);
   --container: 78rem;
   --gutter: clamp(1.25rem, 4vw, 3rem);
 

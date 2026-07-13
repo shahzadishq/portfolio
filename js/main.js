@@ -305,10 +305,12 @@
     });
   });
 
-  /* ---------- Contact form (demo handler) ---------- */
+  /* ---------- Contact form (FormSubmit AJAX, mailto fallback) ---------- */
+  const CONTACT_EMAIL = "shezigull5@gmail.com";
+  const FORM_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
   const form = $("#contactForm");
   const status = $("#formStatus");
-  form?.addEventListener("submit", (e) => {
+  form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = $("#f-name");
     const email = $("#f-email");
@@ -329,17 +331,42 @@
     }
 
     status.classList.remove("is-error");
+    status.textContent = "";
     const btn = $("button[type=submit]", form);
     btn.disabled = true;
     $(".btn-label", btn).textContent = "Sending…";
 
-    // Demo only — wire to your form endpoint / WP handler in production.
-    setTimeout(() => {
+    const payload = {
+      name: name.value.trim(),
+      email: email.value.trim(),
+      service: $("#f-type").value,
+      message: msg.value.trim(),
+      _subject: "New project enquiry — portfolio",
+      _template: "table",
+      _captcha: "false",
+      _honey: form._honey?.value || "",
+    };
+
+    try {
+      const resp = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !(data.success === true || data.success === "true")) throw new Error(data.message || "send failed");
       form.reset();
+      status.textContent = "Thanks — your message is on its way. Expect a reply within 24 hours.";
+    } catch (err) {
+      // Never lose a lead: open the visitor's email app pre-filled instead.
+      status.classList.add("is-error");
+      status.textContent = "Couldn't send just now — opening your email app instead.";
+      const body = `Name: ${payload.name}\nService: ${payload.service}\n\n${payload.message}`;
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Project enquiry — " + payload.name)}&body=${encodeURIComponent(body)}`;
+    } finally {
       btn.disabled = false;
       $(".btn-label", btn).textContent = "Send message";
-      status.textContent = "Thanks — your message is on its way. Expect a reply within 24 hours.";
-    }, 900);
+    }
   });
 
   /* ---------- Footer: local time + year ---------- */
