@@ -711,16 +711,6 @@ p { color: var(--muted); }
   border-radius: 999px; padding: 0.5rem 1rem;
 }
 
-.about-facts { display: flex; flex-direction: column; }
-.about-facts li {
-  display: flex; align-items: baseline; gap: 1.25rem;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid var(--border);
-}
-.about-facts li:first-child { border-top: 1px solid var(--border); }
-.about-facts strong { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; min-width: 5.5rem; }
-.about-facts span:last-child { color: var(--muted); font-size: var(--text-sm); }
-
 /* ==========================================================================
    05 · SERVICES — BENTO
    ========================================================================== */
@@ -754,11 +744,16 @@ p { color: var(--muted); }
 .bento-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
 .bento-card:hover::before { opacity: 1; }
 
+/* Spans sum to 24 cells = 4 full rows of 6 — no auto-placement holes:
+   [ WP 3×2       | Elementor 3 ]
+   [ WP …         | Tech 3      ]
+   [ Speed 2×2    | On-Page 4   ]
+   [ Speed …      | Care 4      ] */
 .bc-wp { grid-column: span 3; grid-row: span 2; }
 .bc-elementor { grid-column: span 3; }
+.bc-tech { grid-column: span 3; }
 .bc-speed { grid-column: span 2; grid-row: span 2; }
-.bc-tech { grid-column: span 2; }
-.bc-onpage { grid-column: span 2; }
+.bc-onpage { grid-column: span 4; }
 .bc-care { grid-column: span 4; }
 
 .bc-body { display: flex; flex-direction: column; gap: 0.65rem; flex: 1; }
@@ -1471,10 +1466,9 @@ p { color: var(--muted); }
   .section-intro { justify-self: start; max-width: 52ch; }
 
   .about-grid { grid-template-columns: 1fr; }
-  .about-visual { flex-direction: row; align-items: flex-start; }
-  .portrait { flex: 1.1; }
-  .about-facts { flex: 1; }
-  .seal { top: -1.8rem; right: auto; left: 44%; width: 6.25rem; height: 6.25rem; }
+  .about-visual { align-items: center; }
+  .portrait { width: min(26rem, 100%); }
+  .seal { top: -1.8rem; right: calc(50% - 15.5rem); width: 6.25rem; height: 6.25rem; }
 
   .bento { grid-template-columns: repeat(2, 1fr); }
   .bc-wp, .bc-elementor, .bc-speed, .bc-tech, .bc-onpage, .bc-care { grid-column: span 2; grid-row: auto; }
