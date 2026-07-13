@@ -63,7 +63,7 @@
     },
     { threshold: 0.18, rootMargin: "0px 0px -6% 0px" }
   );
-  $$(".reveal, [data-split], .img-reveal, .hero-visual, .tl-step, .exp-vitals, .bc-speed, .bc-care").forEach((el) => io.observe(el));
+  $$(".reveal, [data-split], .hero-visual, .tl-step, .exp-vitals, .bc-speed, .bc-care").forEach((el) => io.observe(el));
 
   /* Stagger uptime ticks */
   $$(".uptime-ticks i").forEach((t, i) => t.style.setProperty("--ti", i));
